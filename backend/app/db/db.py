@@ -26,8 +26,8 @@ def get_prod_secret():
     return {
         "host": "db",
         "port": "3307",
-        "mysql_user": mysql_user,
-        "mysql_password": mysql_password
+        "user": mysql_user,
+        "password": mysql_password
     }
 
 def get_dev_secret():
@@ -46,6 +46,8 @@ dbconfig = {
 dbconfig = dbconfig | get_dev_secret()
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
+
+print(f"mysqluser: {dbconfig["user"]}")
 
 pool = pooling.MySQLConnectionPool(
     pool_name="pool-temperature",
