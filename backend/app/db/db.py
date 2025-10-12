@@ -50,11 +50,11 @@ else:
 
 print(f"mysqluser: {dbconfig["user"]}")
 
-pool = pooling.MySQLConnectionPool(
-    pool_name="pool-temperature",
-    pool_size=5,
-    **dbconfig
-)
+# pool = pooling.MySQLConnectionPool(
+#     pool_name="pool-temperature",
+#     pool_size=5,
+#     **dbconfig
+# )
 
 class Database:
     def __init__(self):
