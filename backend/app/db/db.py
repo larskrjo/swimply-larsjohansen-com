@@ -24,7 +24,8 @@ def get_prod_secret():
     mysql_user = get_secret_value_response['mysql_user']
     mysql_password = get_secret_value_response['mysql_password']
     return {
-        "host": "localhost",
+        "host": "db",
+        "port": "3307",
         "mysql_user": mysql_user,
         "mysql_password": mysql_password
     }
@@ -32,6 +33,7 @@ def get_prod_secret():
 def get_dev_secret():
     return {
         "host": "localhost",
+        "port": "3306",
         "user": "root",
         "password": "Abcd1234"
     }
