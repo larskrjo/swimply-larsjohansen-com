@@ -43,9 +43,10 @@ dbconfig = {
     "autocommit": True
 }
 
-dbconfig = dbconfig | get_dev_secret()
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
+else:
+    dbconfig = dbconfig | get_dev_secret()
 
 print(f"mysqluser: {dbconfig["user"]}")
 
