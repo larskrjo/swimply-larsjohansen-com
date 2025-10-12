@@ -1,12 +1,49 @@
+import boto3
+from botocore.exceptions import ClientError
 from mysql.connector import pooling
+import os
+
+def get_prod_secret():
+    secret_name = "Website-MySQL"
+    region_name = "us-west-2"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        raise e
+
+    mysql_user = get_secret_value_response['mysql_user']
+    mysql_password = get_secret_value_response['mysql_password']
+    return {
+        "host": "localhost",
+        "mysql_user": mysql_user,
+        "mysql_password": mysql_password
+    }
+
+def get_dev_secret():
+    return {
+        "host": "localhost",
+        "user": "root",
+        "password": "Abcd1234"
+    }
 
 dbconfig = {
-    "host": "localhost",
-    "user": "root",
-    "password": "Abcd1234",
     "database": "pool_data",
     "autocommit": True
 }
+
+dbconfig = dbconfig | get_dev_secret()
+if os.getenv("DEVELOPMENT_MODE") == "prod":
+    dbconfig = dbconfig | get_prod_secret()
 
 pool = pooling.MySQLConnectionPool(
     pool_name="pool-temperature",
