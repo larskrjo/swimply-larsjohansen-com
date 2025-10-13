@@ -25,7 +25,7 @@ def get_prod_secret():
     mysql_password = get_secret_value_response['mysql_password']
     return {
         "host": "db",
-        "port": "3307",
+        "port": "3306",
         "user": mysql_user,
         "password": mysql_password
     }
@@ -43,12 +43,12 @@ dbconfig = {
     "autocommit": True
 }
 
+print(f"mysqluser: {dbconfig}")
+
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
 else:
     dbconfig = dbconfig | get_dev_secret()
-
-print(f"mysqluser: {dbconfig["user"]}")
 
 # pool = pooling.MySQLConnectionPool(
 #     pool_name="pool-temperature",
