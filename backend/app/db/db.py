@@ -43,18 +43,18 @@ dbconfig = {
     "autocommit": True
 }
 
-print(f"mysqluser: {dbconfig}")
-
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
 else:
     dbconfig = dbconfig | get_dev_secret()
 
-# pool = pooling.MySQLConnectionPool(
-#     pool_name="pool-temperature",
-#     pool_size=5,
-#     **dbconfig
-# )
+print(f"mysqluser: {dbconfig}")
+
+pool = pooling.MySQLConnectionPool(
+    pool_name="pool-temperature",
+    pool_size=5,
+    **dbconfig
+)
 
 class Database:
     def __init__(self):
