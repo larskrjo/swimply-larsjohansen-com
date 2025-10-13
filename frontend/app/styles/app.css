@@ -4,8 +4,8 @@
     font-weight: 400;
 
     color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    color: #213547;
+    background-color: #ffffff;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -24,9 +24,35 @@ body {
 
 @media (prefers-color-scheme: light) {
     :root {
-        color: #213547;
-        background-color: #ffffff;
     }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+    }
+}
+
+/* Kill the iOS/Android tap highlight */
+.recharts-wrapper,
+.recharts-wrapper * {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Remove focus ring when touched (keep keyboard :focus-visible) */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+    outline: none;
+}
+.recharts-wrapper:focus-visible,
+.recharts-surface:focus-visible {
+    outline: auto; /* keep accessibility for keyboard users */
+}
+
+/* Optional: prevent selection/callout while dragging */
+.recharts-wrapper {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .main-error-container {
