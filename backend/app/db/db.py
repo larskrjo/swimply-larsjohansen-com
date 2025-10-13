@@ -1,3 +1,5 @@
+import json
+
 import boto3
 from botocore.exceptions import ClientError
 from mysql.connector import pooling
@@ -15,14 +17,14 @@ def get_prod_secret():
     )
 
     try:
-        get_secret_value_response = client.get_secret_value(
+        resp = json.loads(client.get_secret_value(
             SecretId=secret_name
-        )
+        )["SecretString"])
     except ClientError as e:
         raise e
 
-    mysql_user = get_secret_value_response['mysql_user']
-    mysql_password = get_secret_value_response['mysql_password']
+    mysql_user = resp['mysql_user']
+    mysql_password = resp['mysql_password']
     return {
         "host": "db",
         "port": "3306",
@@ -47,8 +49,6 @@ if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
 else:
     dbconfig = dbconfig | get_dev_secret()
-
-print(f"mysqluser: {dbconfig}")
 
 pool = pooling.MySQLConnectionPool(
     pool_name="pool-temperature",

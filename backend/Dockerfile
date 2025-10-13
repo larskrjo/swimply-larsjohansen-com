@@ -19,7 +19,7 @@ RUN pip install --upgrade pip && pip install .
 COPY . .
 
 # Optional healthcheck that hits /health
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD ["python", "-c", "import sys,urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2); sys.exit(0 if r.status==200 else 1)"]
+HEALTHCHECK --interval=15s --timeout=3s --retries=5 --start-period=5s CMD python healthcheck.py
 
 EXPOSE 8000
 
