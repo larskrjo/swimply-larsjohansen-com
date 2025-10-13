@@ -9,7 +9,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-import app.constants as constants
+import app.constants.constants as constants
 import app.db.db as db
 
 log = logging.getLogger(__name__)
