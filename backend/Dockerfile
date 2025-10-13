@@ -18,9 +18,6 @@ RUN pip install --upgrade pip && pip install .
 # Copy the rest of your app
 COPY . .
 
-# Optional healthcheck that hits /health
-HEALTHCHECK --interval=15s --timeout=3s --retries=5 --start-period=5s CMD python healthcheck.py
-
 EXPOSE 8000
 
 # IMPORTANT: bind 0.0.0.0 so Docker port mapping works
