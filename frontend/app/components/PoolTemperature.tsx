@@ -13,15 +13,46 @@ import {
 } from "recharts";
 import type {NameType, ValueType} from "recharts/types/component/DefaultTooltipContent";
 import type {TemperatureGraphItem} from "~/types/temperature-types";
+import TemperatureButton from "~/components/TemperatureButton";
+import {useState} from "react";
+import {celsiusToFahrenheit} from "~/utils/graph-utils";
 
 export default function PoolTemperature(props: { data: TemperatureGraphItem[], min: number, max: number }) {
+    const [temperatureType, setTemperatureType] = useState("Fahrenheit");
+
+    const scaleAdjustedData: TemperatureGraphItem[] = JSON.parse(JSON.stringify(props.data));
+    let scaleAdjustedMin = props.min;
+    let scaleAdjustedMax = props.max;
+    switch (temperatureType) {
+        case "Fahrenheit":
+            scaleAdjustedMin = Number(celsiusToFahrenheit(scaleAdjustedMin).toFixed(1));
+            scaleAdjustedMax = Number(celsiusToFahrenheit(scaleAdjustedMax).toFixed(1));
+
+            scaleAdjustedData.forEach(temperature => {
+                temperature.min = Number(celsiusToFahrenheit(temperature.min).toFixed(1));
+                temperature.max = Number(celsiusToFahrenheit(temperature.max).toFixed(1));
+                temperature.value = Number(celsiusToFahrenheit(temperature.value).toFixed(1));
+            });
+            break;
+        case "Celsius":
+            scaleAdjustedMin = Number(scaleAdjustedMin.toFixed(1));
+            scaleAdjustedMax = Number(scaleAdjustedMax.toFixed(1));
+
+            scaleAdjustedData.forEach(temperature => {
+                temperature.min = Number(temperature.min.toFixed(1));
+                temperature.max = Number(temperature.max.toFixed(1));
+                temperature.value = Number(temperature.value.toFixed(1));
+            });
+            break;
+    }
+
     return (
         <div style={{ width: 1000, height: 500 }}>
             <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>
                 Swimming Pool Temperature
             </h2>
             <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={props.data} margin={{ top: 12, right: 16, bottom: 8, left: 12 }}>
+                <ComposedChart data={scaleAdjustedData} margin={{ top: 12, right: 16, bottom: 8, left: 12 }}>
                     <defs>
                         {/* subtle gradient for the band */}
                         <linearGradient id="band" x1="0" y1="0" x2="0" y2="1">
@@ -34,8 +65,8 @@ export default function PoolTemperature(props: { data: TemperatureGraphItem[], m
                     <XAxis dataKey="x" tickMargin={8} />
                     <YAxis   yAxisId="temp"
                              type="number"
-                             domain={[Math.floor(props.min) - 2, Math.ceil(props.max) + 2]}
-                             tickFormatter={(value) => `${value}°F`}
+                             domain={[Math.floor(scaleAdjustedMin) - 2, Math.ceil(scaleAdjustedMax) + 2]}
+                             tickFormatter={(value) => `${value}${temperatureType == 'Celsius' ? '°C' : '°F'}`}
                              tickMargin={10}
                              tick={{ fontSize: 14 }}
                              allowDataOverflow />
@@ -99,13 +130,14 @@ export default function PoolTemperature(props: { data: TemperatureGraphItem[], m
                                 if (x == null || y == null) return null;
                                 return (
                                     <text x={x} y={y - 8} textAnchor="middle" fontSize={14} fill="#555">
-                                        {String(value) + "°F"}
+                                        {String(value) + ((temperatureType == 'Celsius') ? '°C' : '°F')}
                                     </text>
                                 );
                             }} />
                     </Line>
                 </ComposedChart>
             </ResponsiveContainer>
+            <TemperatureButton value={temperatureType} onClick={() => setTemperatureType(temperatureType === 'Celsius' ? 'Fahrenheit' : 'Celsius')} />
         </div>
     );
 }

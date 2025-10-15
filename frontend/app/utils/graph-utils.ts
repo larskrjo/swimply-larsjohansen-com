@@ -35,9 +35,9 @@ export function convertToGraphItems(data: TemperatureAndTimeData[]): Temperature
         } else {
             twoOClockValue = (max + min) / 2
         }
-        let minF = Number(celsiusToFahrenheit(min).toFixed(1));
-        let maxF = Number(celsiusToFahrenheit(max).toFixed(1));
-        let valueF = Number(celsiusToFahrenheit(twoOClockValue).toFixed(1));
+        let minF = Number(min);
+        let maxF = Number(max);
+        let valueF = Number(twoOClockValue);
 
         const keyFormatted = new Intl.DateTimeFormat("en-CA", {
             month: "short",
@@ -55,6 +55,6 @@ export function convertToGraphItems(data: TemperatureAndTimeData[]): Temperature
     return dayItems;
 }
 
-function celsiusToFahrenheit(celsius: number): number {
+export function celsiusToFahrenheit(celsius: number): number {
     return celsius * 9 / 5 + 32;
 }

@@ -24,5 +24,5 @@ export async function clientLoader() {
 
 
 export default function IndexPage({loaderData}: Route.ComponentProps) {
-  return <PoolTemperature data={loaderData.rows} min={loaderData.min} max={loaderData.max}/>;
+  return <PoolTemperature data={loaderData.rows} min={loaderData.min} max={loaderData.max} />;
 }

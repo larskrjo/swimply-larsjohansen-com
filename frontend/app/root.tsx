@@ -10,6 +10,17 @@ import {
 import type { Route } from "./+types/root";
 import "./styles/app.css";
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+import { ThemeProvider, CssBaseline } from '@mui/material';
+
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import { theme } from './styles/theme';
+
+
 export function meta({}: Route.MetaArgs) {
     return [
         { title: "Pool Temperature" },
@@ -36,11 +47,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <InitColorSchemeScript />
         <Meta />
         <Links />
       </head>
       <body>
-        {children}
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
