@@ -47,7 +47,7 @@ export default function PoolTemperature(props: { data: TemperatureGraphItem[], m
     }
 
     return (
-        <div style={{ width: 1000, height: 500 }}>
+        <div style={{ width: 800, height: 400 }}>
             <h2 style={{ textAlign: "center", marginBottom: "0.5rem" }}>
                 Swimming Pool Temperature
             </h2>

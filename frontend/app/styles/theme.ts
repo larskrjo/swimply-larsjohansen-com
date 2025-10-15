@@ -9,12 +9,12 @@ export const theme = createTheme({
                 secondary: { main: '#9c27b0' },
             },
         },
-        dark: {
-            palette: {
-                primary: { main: '#90caf9' },
-                secondary: { main: '#ce93d8' },
-                background: { default: '#0b0f19', paper: '#121826' },
-            },
-        },
+        // dark: {
+        //     palette: {
+        //         primary: { main: '#90caf9' },
+        //         secondary: { main: '#ce93d8' },
+        //         background: { default: '#0b0f19', paper: '#121826' },
+        //     },
+        // },
     },
 });
