@@ -1,6 +1,4 @@
-# app/job/data_worker.py
 import json
-import logging
 import threading
 import time
 from datetime import datetime
@@ -11,11 +9,7 @@ from urllib3.util.retry import Retry
 
 import app.constants.constants as constants
 import app.db.db as db
-
-log = logging.getLogger(__name__)
-
-UBIBOT_URL = "https://webapi.ubibot.com/channels/104075"
-UBIBOT_KEY = "bbb665991ad27e823cf2d61a491946fd"
+from app.constants.secrets import SECRETS
 
 
 def _session_with_retry() -> requests.Session:
@@ -64,8 +58,8 @@ class DataWorker:
 
         while not stop_event.is_set():
             try:
-                r = s.get(UBIBOT_URL, params={"account_key": UBIBOT_KEY}, timeout=10)
-                # If 5xx after retries, this may still be 5xx; don't raise hard—log and continue.
+                r = s.get(SECRETS["ubibot_channel_url"], params={"account_key": SECRETS["ubibot_account_key"]}, timeout=10)
+                # If 5xx after retries, this may still be 5xx; don't raise log and continue.
                 if 500 <= r.status_code <= 599:
                     print(f"UbiBot {r.status_code}: {r.text[:200]}")
                     raise requests.HTTPError(f"Upstream {r.status_code}")
@@ -77,7 +71,7 @@ class DataWorker:
 
                 # Parameterized insert; let the driver handle datetime & float types.
                 sql = """
-                        INSERT INTO pool_data (reading_time, temperature)
+                        INSERT INTO pool_temperature (reading_time, temperature)
                         VALUES (%s, %s)
                         ON DUPLICATE KEY UPDATE temperature = VALUES(temperature)
                     """
@@ -96,7 +90,7 @@ class DataWorker:
             except (KeyError, ValueError, TypeError) as e:
                 print(f"UbiBot payload parse error: {e}")
             except Exception as e:
-                # Don't kill the thread on unexpected errors—log and continue
+                # Don't kill the thread on unexpected log and continue
                 print(f"Worker unexpected error: {e}")
 
             # schedule next run relative to monotonic clock

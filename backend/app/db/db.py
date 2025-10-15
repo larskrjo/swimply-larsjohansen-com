@@ -1,36 +1,9 @@
-import json
-
-import boto3
-from botocore.exceptions import ClientError
-from mysql.connector import pooling
 import os
 
-def get_prod_secret():
-    secret_name = "Website-MySQL"
-    region_name = "us-west-2"
+from mysql.connector import pooling
 
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
+from app.constants.secrets import SECRETS
 
-    try:
-        resp = json.loads(client.get_secret_value(
-            SecretId=secret_name
-        )["SecretString"])
-    except ClientError as e:
-        raise e
-
-    mysql_user = resp['mysql_user']
-    mysql_password = resp['mysql_password']
-    return {
-        "host": "db",
-        "port": "3306",
-        "user": mysql_user,
-        "password": mysql_password
-    }
 
 def get_dev_secret():
     return {
@@ -40,8 +13,16 @@ def get_dev_secret():
         "password": "Abcd1234"
     }
 
+def get_prod_secret():
+    return {
+        "host": "mysql",
+        "port": "3306",
+        "user": SECRETS["mysql_user"],
+        "password": SECRETS["mysql_password"]
+    }
+
 dbconfig = {
-    "database": "pool_data",
+    "database": "swimply_larsjohansen_com",
     "autocommit": True
 }
 

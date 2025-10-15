@@ -18,9 +18,9 @@ async def get_temperature():
     with db.Database() as cur:
         cur.execute("""
             SELECT id, temperature, reading_time
-            FROM pool_data
-            WHERE reading_time >= UTC_DATE() - INTERVAL 14 DAY
-            AND reading_time <  UTC_DATE();
+            FROM pool_temperature
+            WHERE CONVERT_TZ(reading_time, '+00:00', 'America/Los_Angeles')
+                >= CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', 'America/Los_Angeles') - INTERVAL 4 DAY;
         """)
         rows = cur.fetchall()
 

@@ -1,9 +1,7 @@
 services:
-  api:
-    build:
-      context: .
-    image: pool-api:latest
-    container_name: pool-api
+  api-swimply:
+    image: api-swimply:latest
+    container_name: api-swimply
     ports: ["8487:8000"]
     restart: unless-stopped
     environment:
@@ -19,8 +17,8 @@ services:
     volumes:
       - ${HOME}/.aws:/root/.aws:ro
     networks:
-      - appnet
+      - shared_network
 
 networks:
-  appnet:
+  shared_network:
     external: true

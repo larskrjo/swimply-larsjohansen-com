@@ -5,7 +5,7 @@ set -euo pipefail
 # 🪄 CONFIGURATION
 # ========================
 BUCKET="swimply-larsjohansen-frontend"
-BUILD_DIR="$HOME/code/pool-temperature/frontend/build/client"
+BUILD_DIR="$HOME/code/swimply-larsjohansen-com/frontend/build/client"
 REGION="us-west-2"
 CF_DIST_ID="E36L2ZKUBABI7B"
 
