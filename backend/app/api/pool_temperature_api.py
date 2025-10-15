@@ -20,7 +20,9 @@ async def get_temperature():
             SELECT id, temperature, reading_time
             FROM pool_temperature
             WHERE CONVERT_TZ(reading_time, '+00:00', 'America/Los_Angeles')
-                >= CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', 'America/Los_Angeles') - INTERVAL 4 DAY;
+                    >= DATE(CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', 'America/Los_Angeles')) - INTERVAL 5 DAY
+                AND CONVERT_TZ(reading_time, '+00:00', 'America/Los_Angeles')
+                    < DATE(CONVERT_TZ(UTC_TIMESTAMP(), '+00:00', 'America/Los_Angeles'));
         """)
         rows = cur.fetchall()
 
