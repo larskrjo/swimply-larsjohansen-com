@@ -1,13 +1,6 @@
-import {
-  isRouteErrorResponse,
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import {isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration,} from "react-router";
 
-import type { Route } from "./+types/root";
+import type {Route} from "./+types/root";
 import "./styles/app.css";
 
 import '@fontsource/roboto/300.css';
@@ -15,10 +8,11 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import { ThemeProvider, CssBaseline } from '@mui/material';
-
+import {CssBaseline, ThemeProvider} from '@mui/material';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-import { theme } from './styles/theme';
+
+import {theme} from './styles/theme';
+import Loading from "~/components/Loading";
 
 
 export function meta({}: Route.MetaArgs) {
@@ -41,17 +35,26 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export function HydrateFallback() {
+    return <Loading />
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+  <html lang="en" data-mui-color-scheme="light">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <InitColorSchemeScript />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning>
+        <InitColorSchemeScript
+          attribute="[data-mui-color-scheme='%s']"
+          defaultMode="light"
+        />
+
+        {/* 2) Match defaultMode with the script */}
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {children}

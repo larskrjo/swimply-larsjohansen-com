@@ -9,7 +9,7 @@ import os
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     allowed_origins = "https://swimply.larsjohansen.com"
 else:
-    allowed_origins = "http://localhost:5173"
+    allowed_origins = "http://swimply.larsjohansen.com:5173"
 
 app = FastAPI()
 
