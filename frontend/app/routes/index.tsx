@@ -19,8 +19,7 @@ export async function clientLoader() {
         if (item.max > max) max = item.max;
     })
 
-    return {rows: [], min: 0, max: 0};
-    // return {rows, min, max};
+    return {rows, min, max};
 }
 
 
