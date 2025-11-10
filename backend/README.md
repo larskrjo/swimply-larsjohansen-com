@@ -2,7 +2,7 @@
 
 ## Development
 
-Install dependencies via `pip install .` in backend folder.
+Install dependencies via `python -m pip install .` in backend folder.
 
 Edit configurations in PyCharm:
 - Create virtual environment

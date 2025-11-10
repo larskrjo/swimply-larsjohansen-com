@@ -2,7 +2,7 @@
 name = "pool-temperature"
 version = "0.1.0"
 description = "Swimming Pool Temperature"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 dependencies = [
     "fastapi",
