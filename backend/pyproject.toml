@@ -3,12 +3,32 @@ name = "pool-temperature"
 version = "0.1.0"
 description = "Swimming Pool Temperature"
 requires-python = ">=3.12"
-
 dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "mysql-connector-python",
     "requests",
     "boto3",
-    "botocore"
+    "botocore",
+    "types-botocore",
+    "types-boto3",
+    "types-requests"
 ]
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''

@@ -3,8 +3,8 @@ import threading
 import time
 from datetime import datetime
 
-import requests
-from requests.adapters import HTTPAdapter
+import requests  # type: ignore[import-untyped]
+from requests.adapters import HTTPAdapter  # type: ignore[import-untyped]
 from urllib3.util.retry import Retry
 
 import app.constants.constants as constants
@@ -24,6 +24,7 @@ def _session_with_retry() -> requests.Session:
     s.mount("https://", HTTPAdapter(max_retries=retry))
     return s
 
+
 def _parse_payload(result: dict) -> tuple[datetime, float]:
     """
     Return (utc_dt, temperature_float). Raises KeyError/ValueError if malformed.
@@ -40,7 +41,9 @@ def _parse_payload(result: dict) -> tuple[datetime, float]:
 
     # last_values is a JSON string, parse it
     last_values = json.loads(result["channel"]["last_values"])
-    rec = last_values[field_key]  # e.g. {"value": "78.5", "created_at": "2025-10-12T22:01:00Z"}
+    rec = last_values[
+        field_key
+    ]  # e.g. {"value": "78.5", "created_at": "2025-10-12T22:01:00Z"}
 
     temp = float(rec["value"])
     iso_time = rec["created_at"]
@@ -49,16 +52,23 @@ def _parse_payload(result: dict) -> tuple[datetime, float]:
 
     return utc_dt, temp
 
+
 class DataWorker:
 
     @staticmethod
-    def worker(stop_event: threading.Event, period: float = constants.POLLING_INTERVAL_SECONDS):
+    def worker(
+        stop_event: threading.Event, period: float = constants.POLLING_INTERVAL_SECONDS
+    ):
         s = _session_with_retry()
         next_run = time.monotonic()
 
         while not stop_event.is_set():
             try:
-                r = s.get(SECRETS["ubibot_channel_url"], params={"account_key": SECRETS["ubibot_account_key"]}, timeout=10)
+                r = s.get(
+                    SECRETS["ubibot_channel_url"],
+                    params={"account_key": SECRETS["ubibot_account_key"]},
+                    timeout=10,
+                )
                 # If 5xx after retries, this may still be 5xx; don't raise log and continue.
                 if 500 <= r.status_code <= 599:
                     print(f"UbiBot {r.status_code}: {r.text[:200]}")
@@ -81,7 +91,9 @@ class DataWorker:
                         inserted_id = getattr(cur, "lastrowid", None)
                     except Exception:
                         inserted_id = None
-                print(f"Upserted reading_time={utc_dt.isoformat()} temp={temp} id={inserted_id}")
+                print(
+                    f"Upserted reading_time={utc_dt.isoformat()} temp={temp} id={inserted_id}"
+                )
 
             except requests.HTTPError as e:
                 print(f"UbiBot HTTP error: {e}")
@@ -102,6 +114,8 @@ class DataWorker:
     @staticmethod
     def start() -> tuple[threading.Event, threading.Thread]:
         stop = threading.Event()
-        t = threading.Thread(target=DataWorker.worker, args=(stop,), daemon=True, name="DataWorker")
+        t = threading.Thread(
+            target=DataWorker.worker, args=(stop,), daemon=True, name="DataWorker"
+        )
         t.start()
         return stop, t

@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.job.data_worker import DataWorker
-from app.api.pool_temperature_api import *
-
+from app.api.pool_temperature_api import pool_router
 import os
 
 if os.getenv("DEVELOPMENT_MODE") == "prod":

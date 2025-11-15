@@ -1,4 +1,5 @@
 import os
+from typing import Any, cast
 
 from mysql.connector import pooling
 
@@ -6,25 +7,19 @@ from app.constants.secrets import SECRETS
 
 
 def get_dev_secret():
-    return {
-        "host": "localhost",
-        "port": "3306",
-        "user": "root",
-        "password": "Abcd1234"
-    }
+    return {"host": "localhost", "port": "3306", "user": "root", "password": "Abcd1234"}
+
 
 def get_prod_secret():
     return {
         "host": "mysql",
         "port": "3306",
         "user": SECRETS["mysql_user"],
-        "password": SECRETS["mysql_password"]
+        "password": SECRETS["mysql_password"],
     }
 
-dbconfig = {
-    "database": "swimply_larsjohansen_com",
-    "autocommit": True
-}
+
+dbconfig = {"database": "swimply_larsjohansen_com", "autocommit": True}
 
 if os.getenv("DEVELOPMENT_MODE") == "prod":
     dbconfig = dbconfig | get_prod_secret()
@@ -34,8 +29,9 @@ else:
 pool = pooling.MySQLConnectionPool(
     pool_name="pool-temperature",
     pool_size=5,
-    **dbconfig
+    **cast(dict[str, Any], dbconfig),
 )
+
 
 class Database:
     def __init__(self):
